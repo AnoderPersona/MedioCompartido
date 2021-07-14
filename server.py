@@ -4,7 +4,7 @@ import time
 localIP     = "127.0.0.1"
 localPort   = 20001
 bufferSize  = 1024
-msgFromServer       = "Datagram Acepted"
+msgFromServer       = "ACK" #= "Datagram Acepted"
 bytesToSend         = str.encode(msgFromServer)
 
 # Create a datagram socket
@@ -17,6 +17,9 @@ print("Link Available")
 # Listen for incoming datagrams
 while(True):
     
+    #Retraso del medio
+
+    #
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]

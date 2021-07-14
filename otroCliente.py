@@ -10,6 +10,13 @@ UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
 # Send to server using created UDP socket
 print("Intentando enviar")
+
+#Retraso del medio
+tiempo = (random.randint(500,3000))/1000
+print("Se generó un restraso de {} ms por simulación del medio".format(tiempo))
+time.sleep(tiempo)
+#
+
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 msg = "Message from Server {}".format(msgFromServer[0])
