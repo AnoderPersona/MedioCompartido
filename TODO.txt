@@ -1,0 +1,14 @@
+Requisitos del proyecto:
+
+    _Server_
+        [x] Pérdidas aleatorias del 30%
+        [x] Retardo de entre 500 y 3000 ms por mensaje
+        [x] Indicar pérdidas
+        [ ] Soportar más de un cliente a la vez
+        [ ] Dejar a un cliente en espera mientras el otro se comunica con el server
+
+    _Clientes_
+        [x] Envío de nombre carácter a carácter
+        [x] Mecanismo de CRC
+        [x] Detección de pérdidas y envío
+        [ ] Tiempo de espera máximo de 2000 ms

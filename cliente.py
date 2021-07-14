@@ -44,3 +44,9 @@ while msgFromClient != "salir":
         contador += 1
 
 UDPClientSocket.sendto(str.encode("done"), serverAddressPort)
+print("listoco")
+msgFromServer = UDPClientSocket.recvfrom(bufferSize)
+print("end")
+nombre = str(msgFromServer[0])
+nombre = nombre[1] + nombre[2].upper() + nombre[3:]
+print("Su nombre es {}".format(nombre))
