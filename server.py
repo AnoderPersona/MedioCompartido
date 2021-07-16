@@ -82,7 +82,10 @@ while(True):
 
                 #Se genera de nuevo la probabilidad de pérdida y el retraso del medio
                 pPerdida = random.randint(0,100)
-                tiempo = (random.randint(500,3000))/1000
+                if pPerdida <= 30:
+                    tiempo = random.randint(2001, 3000)/1000
+                else:
+                    tiempo = (random.randint(500,2000))/1000
                 time.sleep(tiempo)
 
                 print("Se generó un restraso de {} ms por simulación del medio".format(tiempo))
@@ -98,7 +101,7 @@ while(True):
                 #Recibe el mismo paquete desde el cliente
                 message, address = recibirMensaje(bufferSize)
 
-            #Para asegurarse de ingresar el mensaje correcto
+            #Se agrega el carácter al lugar correspondiente
             caracter = str(clientMsg[3])
             listaNombres[idClienteActual-1] += caracter
                 
