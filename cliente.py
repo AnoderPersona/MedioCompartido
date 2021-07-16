@@ -26,25 +26,19 @@ while msgFromClient != "salir" and msgFromClient != "listo":
     print("------\n")
 
     #Pide nombre a usuario
-    msgFromClient = input("Cliente 1, ingrese su nombre carácter por carácter: ")
+    msgFromClient = input("Cliente {}, ingrese su nombre carácter por carácter: ".format(idCLiente))
     msgFromClient = msgFromClient.lower()
     
     if msgFromClient != "salir" and msgFromClient != "listo":
 
-        bytesToSend         = str.encode(str(contador)+msgFromClient[0])
+        bytesToSend         = str.encode(str(contador)+msgFromClient[0]+idCLiente)
 
         #Envía nombre a servidor
         print("Intentando enviar", msgFromClient)
         UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-        
         print("Recibiendo respuesta")
-
-        # if parche ==z
-
         msgFromServer = UDPClientSocket.recvfrom(bufferSize) 
         
-        print(msgFromServer[0])
-
         #Si hay una pérdida, el servidor retorna NAK, pidiendo el paquete de nuevo
         while str(msgFromServer[0]) == "b'NAK'":
             print("Hubo una pérdida, intentando reenviar")
@@ -52,11 +46,15 @@ while msgFromClient != "salir" and msgFromClient != "listo":
             msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
         #print(msgFromServer)
-        print("Mensaje enviado con éxito")
-        contador += 1
+        if str(msgFromServer[0]) == "b'ACK'":
+            print("Mensaje enviado con éxito")
+            contador += 1
+
+        else:
+            print(str(msgFromServer[0])[2:-1])
 
 #Envia mensaje de terminado al server
-UDPClientSocket.sendto(str.encode("done"), serverAddressPort)
+UDPClientSocket.sendto(str.encode("done" + idCLiente), serverAddressPort)
 
 #Recibe e imprime nombre final desde el servidor
 msgFromServer = UDPClientSocket.recvfrom(bufferSize)
