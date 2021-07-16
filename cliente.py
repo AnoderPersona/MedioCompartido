@@ -8,8 +8,6 @@ serverAddressPort   = ("127.0.0.1", 20001)
 bufferSize          = 1024
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
-parche = 0
-
 print("Enviando ping al servidor")
 #Envía ping a servidor
 bytesToSend = str.encode("conect")
@@ -29,6 +27,7 @@ while msgFromClient != "salir" and msgFromClient != "listo":
     msgFromClient = input("Cliente {}, ingrese su nombre carácter por carácter: ".format(idCLiente))
     msgFromClient = msgFromClient.lower()
     
+    #Cuando cliente envía salir o listo, se envía un done al server
     if msgFromClient != "salir" and msgFromClient != "listo":
 
         bytesToSend         = str.encode(str(contador)+msgFromClient[0]+idCLiente)
