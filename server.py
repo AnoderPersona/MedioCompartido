@@ -20,6 +20,7 @@ print("Link Available")
 
 nombre = ''
 idMensaje = 0
+idCliente = 0
 
 while(True):
 
@@ -29,11 +30,22 @@ while(True):
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]
-    idMensaje += 1
+
     print("Link bussy")
-    
+
+    idCliente += 1
+    print("Id del cliente es:",idCliente)
+    idClienteStr = str(idCliente)
+    bytesToSend = str.encode(idClienteStr)
+    UDPServerSocket.sendto(bytesToSend, address)    
+
 
     while str(message) != "b'done'":
+
+        # bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+        # message = bytesAddressPair[0]
+        # address = bytesAddressPair[1]
+        idMensaje += 1
 
         #Probabilidad de pérdida
     
@@ -48,7 +60,7 @@ while(True):
         print(pPerdida)
 
         clientMsg = format(message) 
-        print("El mensaje del cliente es: {}".format(clientMsg))
+        print("El mensaje del cliente es {}: {}".format(idCliente, clientMsg))
         
         #Retraso del medio
         tiempo = (random.randint(500,3000))/1000

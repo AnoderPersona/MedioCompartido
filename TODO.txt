@@ -4,7 +4,7 @@ Requisitos del proyecto:
         [x] Pérdidas aleatorias del 30%
         [x] Retardo de entre 500 y 3000 ms por mensaje
         [x] Indicar pérdidas
-        [ ] Soportar más de un cliente a la vez
+        [ ] Soportar más de un cliente a la vez -> enviar a un cliente su id y que la vaya enviando de vuelta
         [ ] Dejar a un cliente en espera mientras el otro se comunica con el server
 
     _Clientes_
