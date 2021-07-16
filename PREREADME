@@ -1,0 +1,9 @@
+Para ejecutar el programa se necesita:
+  - Python 3
+  - Linux (Usé Ubuntu 20.04.2 LTS)
+--------------------------------------
+Instrucciones
+  - Ejecutar el server primero
+  - Abrir los clientes (cuantos desee conventientes, ambos clientes tienen el mismo código)
+  - Enviar su nombre carácter por carácter
+  - Finalizar enviando "listo" o "salir"
