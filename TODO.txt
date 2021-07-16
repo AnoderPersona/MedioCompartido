@@ -17,5 +17,3 @@ Requisitos del proyecto:
         [x] Por alguna razón el time.sleep no se refleja en el cliente
         [x] Hacer que reciba en string en lugar de lista o pasar la lista a string 
     
-    _notas_
-        * Pareciera que usar != ACK en lugar de == NAK funciona mejor en el while del cliente

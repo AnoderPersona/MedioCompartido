@@ -26,13 +26,12 @@ while msgFromClient != "salir" and msgFromClient != "listo":
     print("------\n")
 
     #Pide nombre a usuario
-    msgFromClient = input("Cliente 1, ingrese su nombre carácter por carácter: ")
+    msgFromClient = input("Cliente {}, ingrese su nombre carácter por carácter: ".format(idCLiente))
     msgFromClient = msgFromClient.lower()
     
     if msgFromClient != "salir" and msgFromClient != "listo":
 
         bytesToSend         = str.encode(str(contador)+msgFromClient[0]+idCLiente)
-
         #Envía nombre a servidor
         print("Intentando enviar", msgFromClient)
         UDPClientSocket.sendto(bytesToSend, serverAddressPort)
