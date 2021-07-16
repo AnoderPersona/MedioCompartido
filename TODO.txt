@@ -11,4 +11,11 @@ Requisitos del proyecto:
         [x] Envío de nombre carácter a carácter
         [x] Mecanismo de CRC
         [x] Detección de pérdidas y envío
-        [ ] Tiempo de espera máximo de 2000 ms
+        [x] Tiempo de espera máximo de 2000 ms
+
+    _Problemas_
+        [ ] Por alguna razón el time.sleep no se refleja en el cliente
+        [ ] 
+    
+    _notas_
+        * Pareciera que usar != ACK en lugar de == NAK funciona mejor en el while del cliente
