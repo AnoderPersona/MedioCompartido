@@ -19,23 +19,8 @@ print("Link Available")
 nombre = ''
 idMensaje = 0
 idCliente = 0
-
-#Recibe connecting
-# print("Recibiendo connecting")
-# bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-# message = bytesAddressPair[0]
-# address = bytesAddressPair[1]
-# print("Connecting recibido")
-
-# idCliente += 1
-# print("Id del cliente es:",idCliente)
-# idClienteStr = str(idCliente)
-# bytesToSend = str.encode(idClienteStr)
-
-#Envía id del cliente
-# UDPServerSocket.sendto(bytesToSend, address) 
-
-
+idClienteActual = 0
+listaNombres = []
 
 while(True):
 
@@ -53,23 +38,21 @@ while(True):
         idClienteStr = str(idCliente)
         bytesToSend = str.encode(idClienteStr)
         UDPServerSocket.sendto(bytesToSend, address)
+        listaNombres.append([])
 
     else:
 
-        print("Link bussy")
-        idMensaje += 1    
+        if str(message)[4].isnumeric():
+            idClienteActual = int(str(message)[4])
 
-        if str(message) != "b'done'":
+        else:
+            print(str(message))
+            idClienteActual = int(str(message)[6])
 
-            # #Recibe mensaje
-            # print("Recibiendo mensaje")
-            # bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-            # message = bytesAddressPair[0]
-            # address = bytesAddressPair[1]
-            # idMensaje += 1    
+        print(str(message)[:6])
+        if str(message)[:6] != "b'done":
 
             print("El mensaje del cliente {} es: {}".format(idCliente, clientMsg))
-            
 
             #Genera probabilidad de pérdida y retraso del medio
             print("Generando probabilidad de perdida")
@@ -109,14 +92,11 @@ while(True):
 
             #Para asegurarse de ingresar el mensaje correcto
             print(clientMsg)
-            print(clientMsg[2], idMensaje)
-            if int(clientMsg[2]) == idMensaje:
-                nombre += str(clientMsg[3])
+            caracter = str(clientMsg[3])
+            listaNombres[idClienteActual-1] += caracter
                 
-            
-            print("El nombre es: ",nombre)
+            print("El nombre hasta ahora es: ",listaNombres[idClienteActual-1])#nombre)
 
-            
             #Manda al cliente un ACK cuando acepta el paquete
             msgFromServer       = "ACK" #= "Datagram Acepted"
             bytesToSend         = str.encode(msgFromServer)
@@ -124,17 +104,11 @@ while(True):
             UDPServerSocket.sendto(bytesToSend, address)
             print("---------")
 
-            # #Recibe mensaje
-            # print("Recibiendo nuevo mensaje")
-            # bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-            # message = bytesAddressPair[0]
-            # address = bytesAddressPair[1]
-            # idMensaje += 1
-            # print("Link bussy")
-
-    #Manda al cliente el nombre final
+        #Manda al cliente el nombre final
         else:
-            print("a")
+            print("Enviando nombre final:", listaNombres[idClienteActual-1])#nombre)
+            nombre = ''.join((listaNombres[idClienteActual-1]))
             bytesToSend = str.encode(nombre)
             UDPServerSocket.sendto(bytesToSend, address)
             print("Link Available") 
+            idClienteActual = 0
