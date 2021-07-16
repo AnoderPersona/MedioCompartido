@@ -8,41 +8,50 @@ serverAddressPort   = ("127.0.0.1", 20001)
 bufferSize          = 1024
 UDPClientSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
 
+parche = 0
+
+print("Enviando ping al servidor")
 #Envía ping a servidor
-bytesToSend = str.encode("conecting")
+bytesToSend = str.encode("conect")
 UDPClientSocket.sendto(bytesToSend, serverAddressPort)
 
+print("Recibiendo respuesta del servidor")
 #Recibe respuesta del server
 msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 idCLiente = str(msgFromServer[0])[2]
 print("ID de cliente es:", idCLiente)
 print("Para salir ingrese: 'salir'")
 
-while msgFromClient != "salir":
+while msgFromClient != "salir" and msgFromClient != "listo":
     print("------\n")
 
     #Pide nombre a usuario
     msgFromClient = input("Cliente 1, ingrese su nombre carácter por carácter: ")
     msgFromClient = msgFromClient.lower()
     
-    if msgFromClient != "salir":
+    if msgFromClient != "salir" and msgFromClient != "listo":
 
         bytesToSend         = str.encode(str(contador)+msgFromClient[0])
 
         #Envía nombre a servidor
-        print("Intentando enviar")
+        print("Intentando enviar", msgFromClient)
         UDPClientSocket.sendto(bytesToSend, serverAddressPort)
-        # msgFromServer = UDPClientSocket.recvfrom(bufferSize)
         
+        print("Recibiendo respuesta")
 
+        # if parche ==z
+
+        msgFromServer = UDPClientSocket.recvfrom(bufferSize) 
+        
         print(msgFromServer[0])
 
         #Si hay una pérdida, el servidor retorna NAK, pidiendo el paquete de nuevo
-        while str(msgFromServer[0]) != "b'NAK'":
+        while str(msgFromServer[0]) == "b'NAK'":
             print("Hubo una pérdida, intentando reenviar")
             UDPClientSocket.sendto(bytesToSend, serverAddressPort)
             msgFromServer = UDPClientSocket.recvfrom(bufferSize)
 
+        #print(msgFromServer)
         print("Mensaje enviado con éxito")
         contador += 1
 

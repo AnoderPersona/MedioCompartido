@@ -21,9 +21,11 @@ idMensaje = 0
 idCliente = 0
 
 #Recibe connecting
-bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-message = bytesAddressPair[0]
-address = bytesAddressPair[1]
+# print("Recibiendo connecting")
+# bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+# message = bytesAddressPair[0]
+# address = bytesAddressPair[1]
+# print("Connecting recibido")
 
 # idCliente += 1
 # print("Id del cliente es:",idCliente)
@@ -31,85 +33,108 @@ address = bytesAddressPair[1]
 # bytesToSend = str.encode(idClienteStr)
 
 #Envía id del cliente
-UDPServerSocket.sendto(bytesToSend, address) 
+# UDPServerSocket.sendto(bytesToSend, address) 
+
+
 
 while(True):
 
-    print("Link bussy")
-
+    print("Recibiendo mensaje")
     bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
     message = bytesAddressPair[0]
     address = bytesAddressPair[1]
-    idMensaje += 1    
+    clientMsg = str(message)
+    print("Mensaje recibido")
 
-    while str(message) != "b'done'":
+    if clientMsg == "b'conect'":
+        print("mensaje es connecting")
+        idCliente += 1
+        print("Id del cliente es:",idCliente)
+        idClienteStr = str(idCliente)
+        bytesToSend = str.encode(idClienteStr)
+        UDPServerSocket.sendto(bytesToSend, address)
 
-        #Recibe mensaje
-        print("a")
-        bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-        message = bytesAddressPair[0]
-        address = bytesAddressPair[1]
+    else:
+
+        print("Link bussy")
         idMensaje += 1    
 
-        clientMsg = format(message) 
-        print("El mensaje del cliente es {}: {}".format(idCliente, clientMsg))
-        
+        if str(message) != "b'done'":
 
-        #Genera probabilidad de pérdida y retraso del medio
-        pPerdida = random.randint(1,100)
-        print(pPerdida)
+            # #Recibe mensaje
+            # print("Recibiendo mensaje")
+            # bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+            # message = bytesAddressPair[0]
+            # address = bytesAddressPair[1]
+            # idMensaje += 1    
 
-        if pPerdida <= 30:
-            tiempo = random.randint(2001, 3000)/1000
-        else:
-            tiempo = (random.randint(500,2000))/1000
+            print("El mensaje del cliente {} es: {}".format(idCliente, clientMsg))
+            
 
-        print("Se generó un restraso de {} ms por simulación del medio".format(tiempo))
-        time.sleep(tiempo)
+            #Genera probabilidad de pérdida y retraso del medio
+            print("Generando probabilidad de perdida")
+            pPerdida = random.randint(1,100)
+            print(pPerdida)
 
-        #Si hay pérdida (Cuando el tiempo es mayor a 2000 ms), se notifica al cliente, y el cliente envía nuevamente los datos
-        while timpo <= 2:
-
-            #Se genera de nuevo la probabilidad de pérdida y el retraso del medio
-            pPerdida = random.randint(0,100)
-            tiempo = (random.randint(500,3000))/1000
-            time.sleep(tiempo)
+            if pPerdida <= 30:
+                tiempo = random.randint(2001, 3000)/1000
+            else:
+                tiempo = (random.randint(500,2000))/1000
 
             print("Se generó un restraso de {} ms por simulación del medio".format(tiempo))
-            print("---Hubo una pérdida---")
+            time.sleep(tiempo)
 
-            #Si hubo una pérdida, envía NAK al cliente y espera nuevo mensaje
-            msgFromServer       = "NAK" 
-            bytesToSend         = str.encode(msgFromServer)
-            UDPServerSocket.sendto(bytesToSend, address)
+            #Si hay pérdida (Cuando el tiempo es mayor a 2000 ms), se notifica al cliente, y el cliente envía nuevamente los datos
+            while tiempo >= 2:
+                print("hubo perdida")
+                #Se genera de nuevo la probabilidad de pérdida y el retraso del medio
+                pPerdida = random.randint(0,100)
+                tiempo = (random.randint(500,3000))/1000
+                time.sleep(tiempo)
 
-            #Recibe el mismo paquete desde el cliente
-            bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-            message = bytesAddressPair[0]
-            address = bytesAddressPair[1]
+                print("Se generó un restraso de {} ms por simulación del medio".format(tiempo))
+                print("---Hubo una pérdida---")
 
-        #Para asegurarse de ingresar el mensaje correcto
-        print(clientMsg[2], idMensaje)
-        if int(clientMsg[2]) == idMensaje:
-            nombre += str(clientMsg[3])
+                print("Enviando NAK")
+                #Si hubo una pérdida, envía NAK al cliente y espera nuevo mensaje
+                msgFromServer       = "NAK" 
+                bytesToSend         = str.encode(msgFromServer)
+                UDPServerSocket.sendto(bytesToSend, address)
+
+                print("Recibiendo mensaje perdido")
+                #Recibe el mismo paquete desde el cliente
+                bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+                message = bytesAddressPair[0]
+                address = bytesAddressPair[1]
+
+            #Para asegurarse de ingresar el mensaje correcto
+            print(clientMsg)
+            print(clientMsg[2], idMensaje)
+            if int(clientMsg[2]) == idMensaje:
+                nombre += str(clientMsg[3])
+                
             
-        
-        print("El nombre es: ",nombre)
+            print("El nombre es: ",nombre)
 
-        #Manda al cliente un ACK cuando acepta el paquete
-        msgFromServer       = "ACK" #= "Datagram Acepted"
-        bytesToSend         = str.encode(msgFromServer)
-        UDPServerSocket.sendto(bytesToSend, address)
-        print("---------")
+            
+            #Manda al cliente un ACK cuando acepta el paquete
+            msgFromServer       = "ACK" #= "Datagram Acepted"
+            bytesToSend         = str.encode(msgFromServer)
+            print("Enviando",bytesToSend)
+            UDPServerSocket.sendto(bytesToSend, address)
+            print("---------")
 
-        # #Recibe mensaje
-        # bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
-        # message = bytesAddressPair[0]
-        # address = bytesAddressPair[1]
-        # idMensaje += 1
-        # print("Link bussy")
+            # #Recibe mensaje
+            # print("Recibiendo nuevo mensaje")
+            # bytesAddressPair = UDPServerSocket.recvfrom(bufferSize)
+            # message = bytesAddressPair[0]
+            # address = bytesAddressPair[1]
+            # idMensaje += 1
+            # print("Link bussy")
 
     #Manda al cliente el nombre final
-    bytesToSend = str.encode(nombre)
-    UDPServerSocket.sendto(bytesToSend, address)
-    print("Link Available") 
+        else:
+            print("a")
+            bytesToSend = str.encode(nombre)
+            UDPServerSocket.sendto(bytesToSend, address)
+            print("Link Available") 
